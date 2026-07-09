@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mood · Algorithmic Mood Music</title>
+    <meta name="description" content="Mood — pick a mood and let an algorithm compose a unique, royalty-free track just for you." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="static/styles.css?v=2" />
+  </head>
+  <body>
+    <!-- drifting background orbs -->
+    <div class="orbs" aria-hidden="true">
+      <span class="orb orb--1"></span>
+      <span class="orb orb--2"></span>
+      <span class="orb orb--3"></span>
+    </div>
+
+    <div class="app">
+      <!-- ── Left sidebar ─────────────────────────── -->
+      <aside class="sidebar">
+        <div class="brand">
+          <span class="brand__logo"><svg class="icon"><use href="#i-wave" /></svg></span>
+          <span class="brand__text">
+            <strong>Mood</strong>
+            <small>Algorithmic Mood Music</small>
+          </span>
+        </div>
+
+        <nav class="nav" aria-label="Primary">
+          <a class="nav__item is-active" href="#" data-view="home"><svg class="icon"><use href="#i-home" /></svg>Home</a>
+          <a class="nav__item" href="#" data-view="explore"><svg class="icon"><use href="#i-compass" /></svg>Explore</a>
+          <a class="nav__item" href="#" data-view="library"><svg class="icon"><use href="#i-library" /></svg>My Library</a>
+          <a class="nav__item" href="#" data-view="favorites"><svg class="icon"><use href="#i-heart" /></svg>Favorites</a>
+          <a class="nav__item" href="#" data-view="history"><svg class="icon"><use href="#i-history" /></svg>History</a>
+          <a class="nav__item" href="#" data-view="settings"><svg class="icon"><use href="#i-settings" /></svg>Settings</a>
+        </nav>
+
+        <div class="sidebar__foot">
+          <figure class="quote">
+            <blockquote>“Music is the voice of the soul.”</blockquote>
+          </figure>
+          <button class="btn-premium" type="button">
+            <svg class="icon"><use href="#i-crown" /></svg>Go Premium
+          </button>
+        </div>
+      </aside>
+
+      <!-- ── Center content ──────────────────────── -->
+      <main class="main">
+        <div id="view-home">
+        <header class="hero">
+          <h1>How do you feel today?</h1>
+          <p>Create the perfect soundtrack for your mood.</p>
+        </header>
+
+        <section aria-label="Mood">
+          <div class="moods" id="mood-grid" role="radiogroup" aria-label="Choose a mood">
+            <!-- mood cards injected by app.js -->
+          </div>
+        </section>
+
+        <section class="panel customize">
+          <div class="panel__head">
+            <h2>Customize Your Vibe</h2>
+            <button class="ghost-btn" type="button" id="reset-btn">Reset</button>
+          </div>
+
+          <div class="sliders">
+            <label class="slider">
+              <span class="slider__label">Energy <em id="energy-val">Medium</em></span>
+              <input type="range" id="energy" min="0" max="100" value="55" />
+              <span class="slider__ends"><i>Low</i><i>High</i></span>
+            </label>
+            <label class="slider">
+              <span class="slider__label">Tempo <em id="tempo-val">—</em></span>
+              <input type="range" id="tempo" min="50" max="170" value="100" />
+              <span class="slider__ends"><i>Slow</i><i>Fast</i></span>
+            </label>
+          </div>
+
+          <div class="chooser">
+            <h3>Instruments</h3>
+            <div class="chips" id="instruments" role="group" aria-label="Instruments">
+              <button type="button" class="chip is-on" data-inst="Piano">Piano</button>
+              <button type="button" class="chip" data-inst="Guitar">Guitar</button>
+              <button type="button" class="chip" data-inst="Strings">Strings</button>
+              <button type="button" class="chip" data-inst="Synth">Synth</button>
+              <button type="button" class="chip" data-inst="Flute">Flute</button>
+              <button type="button" class="chip" data-inst="Lo-fi">Lo-fi</button>
+              <button type="button" class="chip" data-inst="Bells">Bells</button>
+              <button type="button" class="chip" data-inst="Marimba">Marimba</button>
+              <button type="button" class="chip" data-inst="Harp">Harp</button>
+              <button type="button" class="chip" data-inst="Pad">Pad</button>
+              <button type="button" class="chip chip--more" data-inst="More">More ✨</button>
+            </div>
+          </div>
+
+          <div class="chooser">
+            <h3>Duration</h3>
+            <div class="chips" id="durations" role="group" aria-label="Duration">
+              <button type="button" class="chip" data-min="1">1 min</button>
+              <button type="button" class="chip is-on" data-min="3">3 min</button>
+              <button type="button" class="chip" data-min="5">5 min</button>
+              <button type="button" class="chip" data-min="10">10 min</button>
+              <button type="button" class="chip" data-min="30">30 min</button>
+            </div>
+          </div>
+        </section>
+
+        <section class="generate">
+          <button class="btn-generate" id="generate-btn" type="button">
+            <svg class="icon"><use href="#i-spark" /></svg> Generate Music
+          </button>
+          <p class="generate__help" id="generate-help">An algorithm will compose a unique track just for you.</p>
+        </section>
+        </div>
+
+        <section id="view-panel" class="panel view-panel" hidden aria-live="polite"></section>
+      </main>
+
+      <!-- ── Right panels ────────────────────────── -->
+      <aside class="right">
+        <section class="panel now">
+          <div class="panel__head">
+            <h2>Now Playing</h2>
+            <span class="now__live" id="now-live">paused</span>
+          </div>
+
+          <div class="visualizer" id="visualizer" aria-hidden="true"></div>
+
+          <div class="now__art">
+            <div class="cover" id="cover"><svg class="icon"><use href="#i-note" /></svg></div>
+            <div class="now__meta">
+              <strong id="track-title">Midnight Whispers</strong>
+              <span id="track-sub">Chill • Piano • 3:00</span>
+            </div>
+          </div>
+
+          <div class="transport">
+            <button class="t-btn" id="prev-btn" type="button" aria-label="Previous"><svg class="icon"><use href="#i-prev" /></svg></button>
+            <button class="t-btn t-btn--play" id="play-btn" type="button" aria-label="Play"><svg class="icon"><use href="#i-play" /></svg></button>
+            <button class="t-btn" id="next-btn" type="button" aria-label="Next"><svg class="icon"><use href="#i-next" /></svg></button>
+          </div>
+
+          <label class="volume">
+            <svg class="icon"><use href="#i-volume" /></svg>
+            <input type="range" id="volume" min="0" max="100" value="80" aria-label="Volume" />
+          </label>
+
+          <div class="now__actions">
+            <button class="a-btn" id="fav-btn" type="button" aria-label="Favorite"><svg class="icon"><use href="#i-heart" /></svg></button>
+            <button class="a-btn" id="dl-btn" type="button" aria-label="Download MIDI"><svg class="icon"><use href="#i-download" /></svg></button>
+            <button class="a-btn" id="share-btn" type="button" aria-label="Share"><svg class="icon"><use href="#i-share" /></svg></button>
+            <button class="a-btn" id="list-btn" type="button" aria-label="Add to playlist"><svg class="icon"><use href="#i-list" /></svg></button>
+          </div>
+        </section>
+
+        <section class="panel scenes">
+          <div class="panel__head"><h2>Scene Presets</h2></div>
+          <ul class="scene-list" id="scene-list">
+            <li><button type="button" class="scene" data-mood="sleepy" data-inst="Lo-fi"><span class="scene__dot"></span><span><strong>Rainy Night</strong><small>Lo-fi • Rain • Calm</small></span></button></li>
+            <li><button type="button" class="scene" data-mood="happy" data-inst="Guitar"><span class="scene__dot"></span><span><strong>Sunset Drive</strong><small>Indie • Warm • Nostalgic</small></span></button></li>
+            <li><button type="button" class="scene" data-mood="chill" data-inst="Flute"><span class="scene__dot"></span><span><strong>Forest Walk</strong><small>Ambient • Nature • Peaceful</small></span></button></li>
+            <li><button type="button" class="scene" data-mood="focused" data-inst="Synth"><span class="scene__dot"></span><span><strong>Deep Focus</strong><small>Minimal • Soft • Concentration</small></span></button></li>
+          </ul>
+          <button class="ghost-btn ghost-btn--wide" type="button" id="more-scenes">Explore More Scenes</button>
+        </section>
+      </aside>
+    </div>
+
+    <!-- ── Feature strip ─────────────────────────── -->
+    <section class="features" aria-label="Features">
+      <div class="feature"><span class="feature__ic"><svg class="icon"><use href="#i-spark" /></svg></span><div><strong>Algorithm Composed</strong><small>Unique music every time</small></div></div>
+      <div class="feature"><span class="feature__ic"><svg class="icon"><use href="#i-shield" /></svg></span><div><strong>Royalty Free</strong><small>Use anywhere, anytime</small></div></div>
+      <div class="feature"><span class="feature__ic"><svg class="icon"><use href="#i-hifi" /></svg></span><div><strong>High Quality</strong><small>Crystal clear audio</small></div></div>
+      <div class="feature"><span class="feature__ic"><svg class="icon"><use href="#i-lock" /></svg></span><div><strong>Privacy First</strong><small>Your data stays private</small></div></div>
+    </section>
+
+    <footer class="footer">
+      Made with love for music lovers 🎵 ·
+      <a href="https://github.com/wuisabel-gif" target="_blank" rel="noopener noreferrer">wuisabel-gif</a>
+    </footer>
+
+    <!-- icon sprite -->
+    <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+      <defs>
+        <symbol id="i-home" viewBox="0 0 24 24"><path d="M3 10.5 12 3l9 7.5" /><path d="M5 9.5V20h5v-6h4v6h5V9.5" /></symbol>
+        <symbol id="i-compass" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" /><path d="M15.5 8.5 13 13l-4.5 2.5L11 11z" /></symbol>
+        <symbol id="i-library" viewBox="0 0 24 24"><path d="M5 4v16M9 4v16" /><path d="M13 5l5 1.3-3.2 14L9.6 19" /></symbol>
+        <symbol id="i-heart" viewBox="0 0 24 24"><path d="M12 20s-7-4.5-7-9.5A3.8 3.8 0 0 1 12 8a3.8 3.8 0 0 1 7-2.5C19 10.5 12 20 12 20z" /></symbol>
+        <symbol id="i-history" viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 3-6.7M3 4v4h4" /><path d="M12 8v4l3 2" /></symbol>
+        <symbol id="i-settings" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3" /><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2" /></symbol>
+        <symbol id="i-crown" viewBox="0 0 24 24"><path d="M4 8l3.5 3L12 5l4.5 6L20 8l-1.5 10h-13z" /></symbol>
+        <symbol id="i-spark" viewBox="0 0 24 24"><path d="M12 3l1.8 5.4L19 10l-5.2 1.6L12 17l-1.8-5.4L5 10l5.2-1.6z" /></symbol>
+        <symbol id="i-note" viewBox="0 0 24 24"><circle cx="8" cy="18" r="3" /><path d="M11 18V5l9-2v11" /><circle cx="17" cy="14" r="3" /></symbol>
+        <symbol id="i-play" viewBox="0 0 24 24"><path d="M7 5l12 7-12 7z" /></symbol>
+        <symbol id="i-pause" viewBox="0 0 24 24"><path d="M8 5v14M16 5v14" /></symbol>
+        <symbol id="i-stop" viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="2.5" /></symbol>
+        <symbol id="i-prev" viewBox="0 0 24 24"><path d="M7 5v14M19 6l-9 6 9 6z" /></symbol>
+        <symbol id="i-next" viewBox="0 0 24 24"><path d="M17 5v14M5 6l9 6-9 6z" /></symbol>
+        <symbol id="i-volume" viewBox="0 0 24 24"><path d="M4 9v6h4l5 4V5L8 9z" /><path d="M16 9a4 4 0 0 1 0 6" /></symbol>
+        <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 3v12M7 11l5 5 5-5" /><path d="M5 20h14" /></symbol>
+        <symbol id="i-share" viewBox="0 0 24 24"><circle cx="6" cy="12" r="2.5" /><circle cx="18" cy="6" r="2.5" /><circle cx="18" cy="18" r="2.5" /><path d="M8.2 10.8 15.8 7M8.2 13.2 15.8 17" /></symbol>
+        <symbol id="i-list" viewBox="0 0 24 24"><path d="M4 7h10M4 12h10M4 17h7" /><circle cx="18" cy="16" r="2.5" /><path d="M20.5 16V9" /></symbol>
+        <symbol id="i-wave" viewBox="0 0 24 24"><path d="M3 12h2l2-6 3 14 3-18 3 14 2-4h3" /></symbol>
+        <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3l7 3v5c0 5-3.5 8-7 10-3.5-2-7-5-7-10V6z" /></symbol>
+        <symbol id="i-hifi" viewBox="0 0 24 24"><path d="M3 12h3l2-5 3 12 3-16 3 13 2-4h2" /></symbol>
+        <symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="9" rx="2" /><path d="M8 11V8a4 4 0 0 1 8 0v3" /></symbol>
+      </defs>
+    </svg>
+
+    <div id="toast-host" class="toast-host" role="status" aria-live="polite"></div>
+
+    <script type="module" src="static/app.js?v=2"></script>
+  </body>
+</html>
